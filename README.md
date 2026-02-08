@@ -1,48 +1,49 @@
-# Campus Navigator
+# PRM Sampling Evaluation
 ## Overview
-In this project, various sampling-based motion planning algorithms were implemented to navigate WPI's campus using a 2D aerial map. 
+This repository contains a modular framework for experimenting with Probabilistic Roadmap (PRM) path planning in 2D environments. The project evaluates and compares different PRM sampling strategies and studies how key hyperparameters influence roadmap quality, planning success, and computation time.
 
-First, a PRM algorithm with four different sampling methods - uniform, random, gaussian, and bridge sampling methods, was implemented to construct roadmaps. The resulting roadmaps and paths were visualized and the effect of different sampling methods on roadmap generation was analyzed. 
+Four sampling strategies are implemented and tested—random, grid-based, Gaussian, and bridge sampling—across four custom-designed 2D map scenarios. For each configuration, the framework runs repeated experiments, collects performance statistics, and generates visualizations of the best-performing solutions.
 
-In addition, RRT, RRT*, and Informed-RRT* algorithms were implemented on the same map. Each of the three paths obtained for a query was evaluated using path length as a metric. It was seen that Informed-RRT* produces more optimal paths than RRT or RRT*.
+The code is designed to be easily extensible, allowing new sampling strategies, custom maps, and experimental settings to be added with minimal changes.
 
-### Code
-* `PRM Implementation` - code for PRM with different sampling methods
-* `RRT Implementation` - code for RRT, RRT* and Informed-RRT* 
+## Project Scope
+The framework evaluates PRM performance across different scenarios by measuring:
+* Roadmap construction time
+* Path length between start and goal
+* Success rate across multiple runs
 
-Run `main.py` in each folder. This script visualizes the path found along with the roadmap/tree. The `RRT.py` script has the code for the RRT, RRT*, and Informed-RRT* algorithms and the `PRM.py` contains the code for the PRM algorithm. The start and goal positions can be edited in `main.py` along with the sampling parameters.
+In addition to comparing sampling strategies, the project systematically varies key hyperparameters—such as the number of samples, number of neighbors, and sampling bias parameters—to analyze their influence on performance. Each hyperparameter is swept independently while others are held at nominal values, enabling clear insight into under- and over-parameterization effects.
 
-The `results` folder contains screenshots of the paths obtained.
+For each experiment, the best-performing run (shortest feasible path) is identified and visualized.
 
-This project is a combination of homework completed for the RBE550-Motion Planning course at WPI. The `doc` folder contains the writeups for this homework.
+## Code Overview
 
-## Probabilistic Road Map (PRM)
-<em>Uniform Sampling: Path length - 263.53</em>
+`PRM.py` Contains the core PRM implementation. This includes:
+* Sampling methods (random, grid, Gaussian, bridge)
+* Roadmap construction using nearest-neighbor connections
+* Collision checking
+* Shortest-path search using Dijkstra’s algorithm
+* Visualization of roadmaps and paths
 
-<img src="PRM Implementation/results/uniform.png" width = 450/>
+Sampling strategies are implemented as modular methods, making it straightforward to add new ones.
 
-<em>Random Sampling: Path length - 279.38</em>
+`main.py` Handles experiment setup and evaluation. This script:
+* Loads scenario maps
+* Runs repeated trials for each sampling strategy
+* Sweeps hyperparameters
+* Collects statistics (success rate, path length, build time)
+* Saves result summaries and visualizations
 
-<img src="PRM Implementation/results/random.png"  width = 450/>
+Scenarios and parameters can be easily extended or modified here.
 
-<em>Gaussian Sampling: Path length - 285.36</em>
+## Setup
+Python version: 3.13.11
 
-<img src="PRM Implementation/results/gaussian.png"  width = 450/>
-
-<em>Bridge Sampling: Path length - 276.84</em>
-
-<img src="PRM Implementation/results/bridge.png"  width = 450/>
-
-## Rapidly-Exploring Random Trees (RRT)
-<em>RRT: Path length - 356.16</em>
-
-<img src="RRT Implementation/results/RRT.png"  width = 450/>
-
-<em>RRT*: Path length - 254.92</em>
-
-<img src="RRT Implementation/results/rrt_star.png"  width = 450/>
-
-<em>Informed-RRT*: Path length - 250.20</em>
-
-<img src="RRT Implementation/results/informed_rrt.png"  width = 450/>
-
+Install the required dependencies using:
+```
+pip install numpy
+pip install matplotlib
+pip install networkx
+pip install scipy
+```
+Once the dependencies are installed, experiments can be run directly from `main.py`
